@@ -1,0 +1,59 @@
+import { useState } from 'react';
+import { registerUser } from '../api'; // Import your API function
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router'; // Import the useRouter hook
+
+export default function Register() {
+  const router = useRouter(); // Initialize the router hook
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [deviceId, setDeviceId] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [registrationResult, setRegistrationResult] = useState(null);
+
+  const handleRegistration = async () => {
+    try {
+      const result = await registerUser({
+        firstName,
+        lastName,
+        email,
+        deviceId,
+        displayName,
+        phoneNumber,
+      });
+      setRegistrationResult(result);
+    } catch (error) {
+      console.error('Error registering user:', error);
+    }
+  };
+
+
+  return (
+    <>
+      <h1 className="d-flex justify-center">Register Now</h1>
+      <br />
+      <div className="col-sm-6 offset-sm-3 flex-column">
+        <input type="text" name="firstName" className="form-control" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} value={firstName} />
+        <br />
+        <input type="text" name="lastName" className="form-control" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} value={lastName} />
+        <br />
+        <input type="email" name="email" placeholder="Email" className="form-control" onChange={(e) => setEmail(e.target.value)} value={email} />
+        <br />
+        <input type="text" name="deviceId" className="form-control" placeholder="Device Id" onChange={(e) => setDeviceId(e.target.value)} value={deviceId} />
+        <br />
+        <input type="text" name="siaplayName" className="form-control" placeholder="Display Name" onChange={(e) => setDisplayName(e.target.value)} value={displayName} />
+        <br />
+        <input type="text" name="phoneNumber" className="form-control" placeholder="Phone no" onChange={(e) => setPhoneNumber(e.target.value)} value={phoneNumber} />
+        <br />
+      </div>
+      <div className="d-flex justify-center">
+        <button onClick={handleRegistration}>Register</button>
+        {registrationResult && <pre>{JSON.stringify(registrationResult, null, 2)}</pre>}
+      </div>
+    </>
+  );
+}
